@@ -16,6 +16,8 @@ from keras.utils import np_utils
 
     Get to 99.25% test accuracy after 12 epochs (there is still a lot of margin for parameter tuning).
     16 seconds per epoch on a GRID K520 GPU.
+
+    Source: https://github.com/fchollet/keras/blob/master/examples/mnist_cnn.py
 '''
 
 batch_size = 128
