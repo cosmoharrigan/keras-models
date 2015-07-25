@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from __future__ import print_function
 import numpy as np
-np.random.seed(1337) # for reproducibility
+np.random.seed(1337)  # for reproducibility
 
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
@@ -15,9 +15,10 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D
     Run on GPU: THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 python cnn_regression_minecraft.py
 '''
 
+LOAD_SAVED_MODEL = False
 SAVED_MODEL = 'cnn_regression_minecraft_3d_128x128_scaled.hdf5'
-INPUT_IMAGES = '/Users/cosmo/blocks-models/minecraft_single_block_images_grayscale_128x128.pkl'
-LABELS = '/Users/cosmo/blocks-models/input_position_only.pkl'
+INPUT_IMAGES = '/Users/cosmo/mldata/regression_1/images.npy'
+LABELS = '/Users/cosmo/mldata/regression_1/labels.npy'
 IMAGE_WIDTH = 128
 
 batch_size = 32
@@ -101,7 +102,8 @@ model.add(Dense(128, 3))
 
 model.compile(loss='mean_absolute_error', optimizer='rmsprop')
 
-model.load_weights(SAVED_MODEL)
+if LOAD_SAVED_MODEL:
+    model.load_weights(SAVED_MODEL)
 
 model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
           show_accuracy=True, verbose=1, validation_data=(X_test, y_test))
