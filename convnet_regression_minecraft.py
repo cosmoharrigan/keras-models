@@ -12,11 +12,11 @@ from keras.layers.convolutional import Convolution2D, MaxPooling2D
     multivariate regression to produce a 3D coordinate prediction
     given an input image.
 
-    Run on GPU: THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 python cnn_regression_minecraft.py
+    Run on GPU: THEANO_FLAGS=mode=FAST_RUN,device=gpu,floatX=float32 python convnet_regression_minecraft.py
 '''
 
 LOAD_SAVED_MODEL = False
-SAVED_MODEL = 'cnn_regression_minecraft_3d_128x128_scaled.hdf5'
+SAVED_MODEL = 'cnn_regression_minecraft_3d_128x128_scaled_test.hdf5'
 INPUT_IMAGES = '/Users/cosmo/mldata/regression_1/images.npy'
 LABELS = '/Users/cosmo/mldata/regression_1/labels.npy'
 IMAGE_WIDTH = 128
@@ -26,36 +26,10 @@ nb_epoch = 1
 
 
 def load_data():
-    X_file = INPUT_IMAGES
-    y_file = LABELS
-
-    X_data = np.load(X_file)
-    y_data = np.load(y_file)
-
-    # Split into training and test sets
-    m = X_data.shape[0]
-    num_test = round(0.10 * m)
-    num_train = m - num_test
-    indices = np.array(list(range(m)))
-    np.random.shuffle(indices)
-
-    # Optional: discard Z coordinate information to make it a 2-D regression problem
-    # y_data = y_data[:, 0:2]
-
-    image_length = X_data.shape[1]
-    label_length = y_data.shape[1]
-
-    X_train = np.zeros([num_train, image_length])
-    y_train = np.zeros([num_train, label_length])
-    X_test = np.zeros([num_test, image_length])
-    y_test = np.zeros([num_test, label_length])
-
-    for i in range(num_train):
-        X_train[i] = X_data[indices[i]]
-        y_train[i] = y_data[indices[i]]
-    for i in range(num_test):
-        X_test[i] = X_data[indices[num_train + i]]
-        y_test[i] = y_data[indices[num_train + i]]
+    X_train = np.load('train.npy')
+    y_train = np.load('train_labels.npy')
+    X_test  = np.load('test.npy')
+    y_test  = np.load('test_labels.npy')
 
     return (X_train, y_train), (X_test, y_test)
 
@@ -111,4 +85,4 @@ score = model.evaluate(X_test, y_test, show_accuracy=True, verbose=0)
 print('Test score:', score[0])
 print('Test accuracy:', score[1])
 
-model.save_weights(SAVED_MODEL, overwrite=True)
+model.save_weights(SAVED_MODEL, overwrite=False)
